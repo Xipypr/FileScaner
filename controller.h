@@ -1,6 +1,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include "enums.h"
 #include <QObject>
 
 class Controller : public QObject
@@ -37,6 +38,10 @@ signals:
 //Signals to qml
 //Replace with State changed
 signals:
+    void fileExplorerStateChanged(FileExplorerEnums::States);
+
+    void updateProgressStatusSignal(double progress);
+
     void fileOpened(qint64 fileSize);
     void scanStarted();
     void scanPaused();

@@ -5,6 +5,7 @@
 
 #include "worker.h"
 #include "controller.h"
+#include "enums.h"
 
 int main(int argc, char *argv[])
 {
@@ -34,6 +35,10 @@ int main(int argc, char *argv[])
     QObject::connect(&controller, &Controller::stopScanSignal, worker, &Worker::stopScan);
     QObject::connect(worker, &Worker::scanStopped, &controller, &Controller::scanStopped);
 
+    //State changed
+    QObject::connect(worker, &Worker::fileExplorerStateChanged, &controller, &Controller::fileExplorerStateChanged);
+    QObject::connect(worker, &Worker::updateProgressStatusSignal, &controller, &Controller::updateProgressStatusSignal);
+
     // Подключаем завершение потока к завершению работы
     QObject::connect(worker, &Worker::workFinished, thread, &QThread::quit);
     QObject::connect(worker, &Worker::workFinished, worker, &Worker::deleteLater);
@@ -42,6 +47,10 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     // Регистрируем контроллер в QML
     engine.rootContext()->setContextProperty("controller", &controller);
+    qmlRegisterUncreatableMetaObject(FileExplorerEnums::staticMetaObject,
+                                     "com.enums", 1, 0,
+                                     "FileExplorerEnums",
+                                     "States for file explorer");
 
     // Запуск потока
     thread->start();

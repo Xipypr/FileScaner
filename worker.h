@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+#include "enums.h"
 #include "fileexplorer.h"
 
 class Worker : public QObject
@@ -30,6 +31,11 @@ signals:
     void scanStarted();
     void scanPaused();
     void scanStopped();
+
+    void fileExplorerStateChanged(FileExplorerEnums::States);
+
+    void updateProgressStatusSignal(double progress);
+
 private:
     FileExplorer m_fileExplorer;
 };

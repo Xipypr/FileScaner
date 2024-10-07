@@ -294,5 +294,14 @@ ApplicationWindow {
             console.log("Scan stopped")
             row.state = "ScanStopped";
         }
+
+        function onUpdateProgressStatusSignal(value) {
+            progressBar.value = value
+        }
+
+        function onFileExplorerStateChanged(value) {
+            console.log("State changed " + value)
+            // console.log("State check" + FileExplorerEnums.IDLE)
+        }
     }
 }

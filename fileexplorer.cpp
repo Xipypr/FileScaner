@@ -18,23 +18,25 @@ qint64 FileExplorer::openFile(const QString &fileName)
         return -1;
     }
 
-    setNewState(States::READY_TO_START);
+    setNewState(FileExplorerEnums::States::READY_TO_START);
+    updateProgressStatus();
     return m_file.size();
 }
 
 void FileExplorer::startScan()
 {
+    //TODO научиться прибить это
     auto feature = QtConcurrent::run(&FileExplorer::startScanFile, this);
 }
 
 void FileExplorer::pauseScan()
 {
-    if (m_state == States::RUNNIG)
+    if (m_state == FileExplorerEnums::States::RUNNIG)
     {
-        setNewState(States::PAUSED);
+        setNewState(FileExplorerEnums::States::PAUSED);
         qDebug() << "paused";
     }
-    else if (m_state == States::PAUSED)
+    else if (m_state == FileExplorerEnums::States::PAUSED)
     {
         startScan();
         qDebug() << "running";
@@ -43,7 +45,7 @@ void FileExplorer::pauseScan()
 
 void FileExplorer::stopScan()
 {
-    setNewState(States::STOPED);
+    setNewState(FileExplorerEnums::States::STOPED);
     emit scanStopped();
     reset();
 }
@@ -57,14 +59,15 @@ void FileExplorer::startScanFile()
         return;
     }
 
-    setNewState(States::RUNNIG);
+    setNewState(FileExplorerEnums::States::RUNNIG);
     emit scanStarted();
 
     m_file.seek(m_currentOffset);
 
     QStringList words;
+    quint8 iter = 0;
 
-    while (m_state == States::RUNNIG  &&
+    while (m_state == FileExplorerEnums::States::RUNNIG  &&
            !m_file.atEnd())
     {
         QByteArray block = m_file.read(m_buffSize); // Читаем блок данных
@@ -85,11 +88,18 @@ void FileExplorer::startScanFile()
         words.append(QString::fromUtf8(block).split(regExp, Qt::SkipEmptyParts));
 
         m_currentOffset+=m_buffSize;
+        ++iter;
+
+        //Just a simple stupid solution to update proress
+        if (iter == 10)
+        {
+            updateProgressStatus();
+        }
     }
 
     if (m_file.atEnd())
     {
-        setNewState(States::READING_ENDED);
+        setNewState(FileExplorerEnums::States::READING_ENDED);
     }
 
     QHash<QString, quint32> resultHash;
@@ -98,10 +108,7 @@ void FileExplorer::startScanFile()
         ++resultHash[word];
     }
 
-    qDebug() << "Current procent " << double(m_currentOffset)/m_file.size() * 100;
-    qDebug() << "Bytes processed " << m_currentOffset << " of " <<  m_file.size();
-
-    if (m_state == States::PAUSED)
+    if (m_state == FileExplorerEnums::States::PAUSED)
     {
         emit scanPaused();
     }
@@ -111,7 +118,7 @@ void FileExplorer::startScanFile()
     }
 }
 
-void FileExplorer::setNewState(States newState)
+void FileExplorer::setNewState(FileExplorerEnums::States newState)
 {
     if (m_state == newState)
     {
@@ -124,7 +131,14 @@ void FileExplorer::setNewState(States newState)
 
 void FileExplorer::reset()
 {
-    // m_file.reset();
+    m_file.close();
     m_currentOffset = 0;
     m_leftover = {};
+}
+
+void FileExplorer::updateProgressStatus()
+{
+    double progress = double(m_currentOffset)/m_file.size() * 100;
+
+    emit updateProgressStatusSignal(progress);
 }

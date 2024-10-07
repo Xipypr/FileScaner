@@ -27,20 +27,24 @@ public:
     void stopScan();
 
 signals:
-    void stateChanged(States);
+    void stateChanged(FileExplorerEnums::States);
 
     void scanStarted();
     void scanPaused();
     void scanStopped();
 
+    void updateProgressStatusSignal(double progress);
+
 private:
     void startScanFile();
 
-    void setNewState(States newState);
+    void setNewState(FileExplorerEnums::States newState);
 
     void reset();
 
-    States m_state = States::IDLE;
+    void updateProgressStatus();
+
+    FileExplorerEnums::States m_state = FileExplorerEnums::States::IDLE;
     QFile m_file;
     qint64 m_currentOffset = 0;
     QByteArray m_leftover = {};
