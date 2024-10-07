@@ -5,10 +5,11 @@ ApplicationWindow {
     visible: true
     width: 640
     height: 480
-    title: "Worker Thread Example"
+    title: "2GisTest"
 
-    Row {
-        id: row
+    Rectangle {
+        id: mainParent
+        color: "#00ffffff"
         anchors.fill: parent
         anchors.leftMargin: 0
         anchors.rightMargin: 0
@@ -17,8 +18,8 @@ ApplicationWindow {
 
         Column {
             id: controlPanel
-            width: row.width * 0.2
-            height: row.height
+            width: mainParent.width * 0.2
+            height: mainParent.height
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.leftMargin: 0
@@ -39,7 +40,7 @@ ApplicationWindow {
             Button {
                 id: startScanFileBtn
                 width: controlPanel.width
-                height: row.height / 8 - row.height * 0.01 * 3
+                height: mainParent.height / 8 - mainParent.height * 0.01 * 3
                 text: qsTr("Start Scan")
                 font.pixelSize: startScanFileBtn.icon.width
                 onClicked: controller.startScan()
@@ -67,7 +68,7 @@ ApplicationWindow {
         Row {
             id: gisto
             x: controlPanel.width
-            width: row.width - controlPanel.width - stats.width
+            width: mainParent.width - controlPanel.width - stats.width
             height: 400
             anchors.top: parent.top
             anchors.bottom: parent.bottom
@@ -107,10 +108,11 @@ ApplicationWindow {
             }
         }
 
-        Column {
+        Rectangle {
             id: stats
-            width: row.width * 0.2
-            height: row.height
+            width: mainParent.width * 0.2
+            height: mainParent.height
+            color: "#00ffffff"
             anchors.right: parent.right
             anchors.top: parent.top
 
@@ -275,24 +277,24 @@ ApplicationWindow {
 
         function onFileOpened(value) {
             console.log("File opened with size " + value)
-            row.state = "ReadyToStart";
+            mainParent.state = "ReadyToStart";
         }
 
         function onScanStarted() {
             console.log("Starting scan")
-            row.state = "ScanInProgress";
+            mainParent.state = "ScanInProgress";
         }
 
         function onScanPaused() {
             console.log("Paused scan")
-            row.state = "ScanPaused";
+            mainParent.state = "ScanPaused";
         }
 
 
         //TODO error handling
         function onScanStopped() {
             console.log("Scan stopped")
-            row.state = "ScanStopped";
+            mainParent.state = "ScanStopped";
         }
 
         function onUpdateProgressStatusSignal(value) {
