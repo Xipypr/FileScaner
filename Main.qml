@@ -27,13 +27,28 @@ ApplicationWindow {
             topPadding: controlPanel.height / 4 - controlPanel.height * 0.01 * 3
             spacing: controlPanel.height * 0.01
 
+            FileDialog {
+                id: fileDialog
+                title: "Выберите файл"
+                nameFilters: ["All files (*)"]
+
+                onAccepted: {
+                    statusText = "Current file is: " + filePath
+                    filePath = fileDialog.currentFile
+                    controller.openFile(filePath)
+                }
+                onRejected: {
+                    console.log("Файл не был выбран")
+                }
+            }
+
             Button {
                 id: openFileBtn
                 width: controlPanel.width
                 height: controlPanel.height / 8 - controlPanel.height * 0.01 * 3
                 text: qsTr("Open File")
                 font.pixelSize: openFileBtn.icon.width
-                onClicked: controller.openFile(filePath)
+                onClicked: fileDialog.open()
             }
 
             Button {
@@ -100,8 +115,6 @@ ApplicationWindow {
                             color: textColorPattern
                         }
                     }
-
-
                 }
             }
         }
@@ -228,29 +241,9 @@ ApplicationWindow {
                     enabled: false
                 }
             }
-
         ]
         state: "WaitingForFile"
     }
-
-    // FileDialog {
-    // id: fileDialog
-    // title: "Выберите файл"
-    // nameFilters: ["Текстовые файлы (*.txt)", "Все файлы (*)"]
-
-    // onAccepted: {
-    // console.log("Выбранный файл: " + fileDialog.file)
-    // Здесь можно обработать выбранный файл
-    // }
-    // onRejected: {
-    // console.log("Файл не был выбран")
-    // }
-    // }
-
-    // Button {
-    // text: "Открыть диалог выбора файла"
-    // onClicked: fileDialog.open()
-    // }
 
     Connections {
         target: controller

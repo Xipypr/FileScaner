@@ -13,7 +13,7 @@ FileExplorer::FileExplorer(DataModel &dataModel, QObject *parent)
 
 qint64 FileExplorer::openFile(const QString &fileName)
 {
-    m_file.setFileName(fileName);
+    m_file.setFileName(QUrl{fileName}.toLocalFile());
     if (!m_file.open(QIODevice::ReadOnly | QIODevice::Text | QIODevice::ExistingOnly))
     {
         return -1;
