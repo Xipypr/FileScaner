@@ -125,6 +125,7 @@ void FileExplorer::reset()
     m_file.close();
     m_currentOffset = 0;
     m_leftover = {};
+    m_dataModel.reset();
 }
 
 void FileExplorer::updateProgressStatus()

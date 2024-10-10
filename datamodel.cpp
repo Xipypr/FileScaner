@@ -42,3 +42,8 @@ QList<WordFrequency> DataModel::getTopWords()
 
     return result;
 }
+
+void DataModel::reset()
+{
+    m_data.clear();
+}

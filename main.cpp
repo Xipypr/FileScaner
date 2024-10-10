@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
                                      "equipment.enums", 1, 0,
                                      "FileExplorerEnums",
                                      "States for file explorer");
-    qmlRegisterType<WordFrequency>("equipment.structs", 1, 0, "WordFrequency");
+    qmlRegisterType<WordFrequency>("equipment.structs", 1, 0, "wordFrequency");
 
     // Запуск потока
     thread->start();
