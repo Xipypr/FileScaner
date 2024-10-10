@@ -1,6 +1,5 @@
 #include "fileexplorer.h"
 
-#include <QDebug>
 #include <QRegularExpression>
 #include <QtConcurrent/QtConcurrent>
 
@@ -26,7 +25,6 @@ qint64 FileExplorer::openFile(const QString &fileName)
 
 void FileExplorer::startScan()
 {
-    //TODO научиться прибить это
     auto feature = QtConcurrent::run(&FileExplorer::startScanFile, this);
 }
 
@@ -35,12 +33,10 @@ void FileExplorer::pauseScan()
     if (m_state == FileExplorerEnums::States::RUNNIG)
     {
         setNewState(FileExplorerEnums::States::PAUSED);
-        qDebug() << "paused";
     }
     else if (m_state == FileExplorerEnums::States::PAUSED)
     {
         startScan();
-        qDebug() << "running";
     }
 }
 

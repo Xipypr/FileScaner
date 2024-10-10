@@ -18,7 +18,7 @@ qt_add_qml_module(appFileScaner
     QML_FILES
         Main.qml
         SOURCES
-        SOURCES controller.h controller.cpp
+        SOURCES controller.h
         SOURCES worker.h worker.cpp
         SOURCES fileexplorer.h fileexplorer.cpp
         SOURCES enums.h

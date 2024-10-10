@@ -39,9 +39,7 @@ int main(int argc, char *argv[])
     QObject::connect(&controller, &Controller::updateWordRatingsSignal, worker, &Worker::updateWordRatings);
     QObject::connect(worker, &Worker::updateWordsRating, &controller, &Controller::updateWordsRating);
 
-    // Подключаем завершение потока к завершению работы
-    QObject::connect(worker, &Worker::workFinished, thread, &QThread::quit);
-    QObject::connect(worker, &Worker::workFinished, worker, &Worker::deleteLater);
+    // Delete thread
     QObject::connect(thread, &QThread::finished, thread, &QThread::deleteLater);
 
     QQmlApplicationEngine engine;

@@ -9,17 +9,10 @@ Worker::Worker(QObject *parent)
     connect(&m_fileExplorer, &FileExplorer::updateProgressStatusSignal, this, &Worker::updateProgressStatusSignal);
 }
 
-void Worker::process() {
-    for (int i = 0; i < 5; ++i) {
-        emit dataChanged(i);  // Сигнал для передачи данных
-        QThread::sleep(1);    // Имитация работы
-    }
-    emit workFinished();  // Сигнал завершения работы
-}
-
 void Worker::openFile(const QString &fileName)
 {
     auto result = m_fileExplorer.openFile(fileName);
+    updateWordRatings();
     emit fileOpened(result);
 }
 

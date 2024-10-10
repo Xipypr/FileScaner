@@ -14,8 +14,6 @@ public:
     explicit Worker(QObject *parent = nullptr);
 
 public slots:
-    void process();
-
     void openFile(const QString &fileName);
 
     void startScan();
@@ -28,7 +26,6 @@ public slots:
 
 signals:
     void dataChanged(int);
-    void workFinished();
 
     void fileOpened(qint64);
 

@@ -11,7 +11,9 @@ class Controller : public QObject
 {
     Q_OBJECT
 public:
-    explicit Controller(QObject *parent = nullptr);
+    explicit Controller(QObject *parent = nullptr)
+        : QObject{parent}
+    {}
 
 public slots:
     void openFile(const QString &fileName){
