@@ -317,7 +317,7 @@ ApplicationWindow {
 
     Timer {
         id: updateTimer
-        interval: 500
+        interval: 250
         running: false
         repeat: true
         onTriggered: {

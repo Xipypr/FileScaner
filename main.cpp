@@ -40,6 +40,10 @@ int main(int argc, char *argv[])
     QObject::connect(worker, &Worker::updateWordsRating, &controller, &Controller::updateWordsRating);
 
     // Delete thread
+    QObject::connect(&app, &QCoreApplication::aboutToQuit, thread, &QThread::quit);
+    QObject::connect(&app, &QCoreApplication::aboutToQuit, [&]() {
+        thread->wait();
+    });
     QObject::connect(thread, &QThread::finished, thread, &QThread::deleteLater);
 
     QQmlApplicationEngine engine;
