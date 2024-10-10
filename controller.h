@@ -51,9 +51,6 @@ signals:
     void updateProgressStatusSignal(double progress);
 
     void fileOpened(qint64 fileSize);
-    void scanStarted();
-    void scanPaused();
-    void scanStopped();
 
     void updateWordsRating(QList<WordFrequency>);
 };

@@ -46,8 +46,7 @@ void FileExplorer::pauseScan()
 
 void FileExplorer::stopScan()
 {
-    setNewState(FileExplorerEnums::States::STOPED);
-    emit scanStopped();
+    setNewState(FileExplorerEnums::States::STOPPED);
     reset();
 }
 
@@ -56,12 +55,11 @@ void FileExplorer::startScanFile()
 {
     if (!m_file.isOpen())
     {
-        emit scanStopped();
+        setNewState(FileExplorerEnums::States::STOPPED);
         return;
     }
 
     setNewState(FileExplorerEnums::States::RUNNIG);
-    emit scanStarted();
 
     m_file.seek(m_currentOffset);
 
@@ -105,13 +103,9 @@ void FileExplorer::startScanFile()
         setNewState(FileExplorerEnums::States::READING_ENDED);
     }
 
-    if (m_state == FileExplorerEnums::States::PAUSED)
+    if (m_state != FileExplorerEnums::States::PAUSED)
     {
-        emit scanPaused();
-    }
-    else
-    {
-        emit stopScan();
+        stopScan();
     }
 }
 

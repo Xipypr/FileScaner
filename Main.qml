@@ -278,35 +278,34 @@ ApplicationWindow {
     Connections {
         target: controller
 
-        function onFileOpened(value) {
-            console.log("File opened with size " + value)
-            mainParent.state = "ReadyToStart";
-        }
-
-        function onScanStarted() {
-            console.log("Starting scan")
-            mainParent.state = "ScanInProgress";
-        }
-
-        function onScanPaused() {
-            console.log("Paused scan")
-            mainParent.state = "ScanPaused";
-        }
-
-
-        //TODO error handling
-        function onScanStopped() {
-            console.log("Scan stopped")
-            mainParent.state = "ScanStopped";
-        }
-
         function onUpdateProgressStatusSignal(value) {
             progressBar.value = value
         }
 
         function onFileExplorerStateChanged(value) {
-            console.log("State changed " + value)
-            console.log(value === FileExplorerEnums.IDLE)
+            switch (value)
+            {
+            case FileExplorerEnums.IDLE:
+                mainParent.state = "ReadyToStart";
+                break
+            case FileExplorerEnums.READY_TO_START:
+                mainParent.state = "ReadyToStart";
+                break
+            case FileExplorerEnums.RUNNIG:
+                mainParent.state = "ScanInProgress";
+                break
+            case FileExplorerEnums.PAUSED:
+                mainParent.state = "ScanPaused";
+                break
+            case FileExplorerEnums.STOPPED:
+                mainParent.state = "ScanStopped";
+                break
+            case FileExplorerEnums.READING_ENDED:
+                mainParent.state = "ScanStopped";
+                break
+            default:
+                break
+            }
         }
 
         function onUpdateWordsRating (list) {

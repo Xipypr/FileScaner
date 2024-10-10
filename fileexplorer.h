@@ -30,10 +30,6 @@ public:
 signals:
     void stateChanged(FileExplorerEnums::States);
 
-    void scanStarted();
-    void scanPaused();
-    void scanStopped();
-
     void updateProgressStatusSignal(double progress);
 
 private:

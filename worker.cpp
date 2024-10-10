@@ -5,8 +5,6 @@ Worker::Worker(QObject *parent)
     : QObject{parent}
     , m_fileExplorer(m_data, this)
 {
-    connect(&m_fileExplorer, &FileExplorer::scanStopped, this, &Worker::scanStopped);
-    connect(&m_fileExplorer, &FileExplorer::scanStarted, this, &Worker::scanStarted);
     connect(&m_fileExplorer, &FileExplorer::stateChanged, this, &Worker::fileExplorerStateChanged);
     connect(&m_fileExplorer, &FileExplorer::updateProgressStatusSignal, this, &Worker::updateProgressStatusSignal);
 }

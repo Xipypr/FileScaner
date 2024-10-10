@@ -26,15 +26,12 @@ int main(int argc, char *argv[])
 
     //Scan file
     QObject::connect(&controller, &Controller::startScanSignal, worker, &Worker::startScan);
-    QObject::connect(worker, &Worker::scanStarted, &controller, &Controller::scanStarted);
 
     //Pause scan
     QObject::connect(&controller, &Controller::pauseScanSignal, worker, &Worker::pauseScan);
-    QObject::connect(worker, &Worker::scanPaused, &controller, &Controller::scanPaused);
 
     //Stop scan
     QObject::connect(&controller, &Controller::stopScanSignal, worker, &Worker::stopScan);
-    QObject::connect(worker, &Worker::scanStopped, &controller, &Controller::scanStopped);
 
     //State changed
     QObject::connect(worker, &Worker::fileExplorerStateChanged, &controller, &Controller::fileExplorerStateChanged);

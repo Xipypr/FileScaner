@@ -13,7 +13,7 @@ enum States
     READY_TO_START,
     RUNNIG,
     PAUSED,
-    STOPED,
+    STOPPED,
     READING_ENDED
 };
 

@@ -31,9 +31,6 @@ signals:
     void workFinished();
 
     void fileOpened(qint64);
-    void scanStarted();
-    void scanPaused();
-    void scanStopped();
 
     void fileExplorerStateChanged(FileExplorerEnums::States);
 
