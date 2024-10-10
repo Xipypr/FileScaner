@@ -45,5 +45,6 @@ QList<WordFrequency> DataModel::getTopWords()
 
 void DataModel::reset()
 {
+    const std::lock_guard<std::mutex> lock(m_mutex);
     m_data.clear();
 }

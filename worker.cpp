@@ -36,7 +36,6 @@ void Worker::pauseScan()
 void Worker::stopScan()
 {
     m_fileExplorer.stopScan();
-    //should get signal from fileExplorer
 }
 
 void Worker::updateWordRatings()

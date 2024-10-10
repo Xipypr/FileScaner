@@ -100,7 +100,10 @@ void FileExplorer::startScanFile()
 
     if (m_file.atEnd())
     {
+        emit updateProgressStatusSignal(100);
         setNewState(FileExplorerEnums::States::READING_ENDED);
+        reset();
+        return;
     }
 
     if (m_state != FileExplorerEnums::States::PAUSED)

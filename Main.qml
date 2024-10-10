@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Dialogs
 
 import equipment.structs
 import equipment.enums
@@ -10,26 +11,21 @@ ApplicationWindow {
     height: 480
     title: "2GisTest"
 
+    property string statusText: "Waiting for file"
+    property string filePath: "E://Words.txt"
+
     Rectangle {
         id: mainParent
-        color: "#00ffffff"
         anchors.fill: parent
-        anchors.leftMargin: 0
-        anchors.rightMargin: 0
-        anchors.topMargin: 0
-        anchors.bottomMargin: 0
 
         Column {
             id: controlPanel
-            width: mainParent.width * 0.2
-            height: mainParent.height
+            width: parent.width * 0.2
             anchors.left: parent.left
             anchors.top: parent.top
-            anchors.leftMargin: 0
-            anchors.topMargin: 0
+            anchors.bottom: statusBar.top
             topPadding: controlPanel.height / 4 - controlPanel.height * 0.01 * 3
             spacing: controlPanel.height * 0.01
-
 
             Button {
                 id: openFileBtn
@@ -37,7 +33,7 @@ ApplicationWindow {
                 height: controlPanel.height / 8 - controlPanel.height * 0.01 * 3
                 text: qsTr("Open File")
                 font.pixelSize: openFileBtn.icon.width
-                onClicked: controller.openFile("E://Words.txt")
+                onClicked: controller.openFile(filePath)
             }
 
             Button {
@@ -68,109 +64,72 @@ ApplicationWindow {
             }
         }
 
-        Row {
+        Rectangle {
             id: gisto
-            x: controlPanel.width
-            width: mainParent.width - controlPanel.width - stats.width
-            height: 400
+            y: 0
+            anchors.left: controlPanel.right
+            anchors.right: parent.right
             anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.topMargin: 100
-            anchors.bottomMargin: 100
+            anchors.bottom: statusBar.top
 
-            Repeater {
-                id: gistoRepeater
+            ListView {
+                id: listView
+                width: gisto.width
+                anchors.fill: parent
+                anchors.leftMargin: 5
+
                 model: ListModel {
-                    ListElement {
-                        name: "Red"
-                        value: 200
-                        colorCode: "#b3d68d"
-                    }
-
-                    ListElement {
-                        name: "Red"
-                        value: 200
-                        colorCode: "#b3d68d"
-                    }
-
-                    ListElement {
-                        name: "Red"
-                        value: 200
-                        colorCode: "#b3d68d"
-                    }
+                    id: wordFrequencyModel
                 }
+                delegate: Row {
+                    spacing: 20
 
-                delegate: Column {
-                    spacing: 5
-                    Rectangle {
-                        width: gisto.width/15
-                        height: value
-                        color: colorCode
+                    Text {
+                        id: delegateText
+                        width: gisto.width*0.15
+                        text: name
                     }
+
+                    Rectangle {
+                        width: (gisto.width - delegateText.width - gisto.width*0.1) * w
+                        height: gisto.height / 15
+                        color: colorPattern
+                        Text {
+                            width: 100
+                            text: value
+                            color: textColorPattern
+                        }
+                    }
+
+
                 }
             }
         }
 
         Rectangle {
-            id: stats
-            width: mainParent.width * 0.2
-            height: mainParent.height
-            color: "#00ffffff"
+            id: statusBar
+            y: 927
+            height: parent.height / 10
+            color: "#d3d3d3"
+            anchors.left: parent.left
             anchors.right: parent.right
-            anchors.top: parent.top
+            anchors.bottom: parent.bottom
 
             ProgressBar {
                 id: progressBar
-                width: stats.width
-                height: stats.height * 0.10
-                value: 65
-                anchors.bottom: parent.bottom
-                indeterminate: false
-                rightInset: 0
-                leftInset: 0
-                bottomInset: 0
-                topInset: 0
-                transformOrigin: Item.Bottom
+                value: 0
+                anchors.fill: parent
                 to: 100
-            }
 
-            ListView {
-                id: listView
-                width: stats.width
-                anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.bottom: progressBar.top
-                anchors.leftMargin: 0
-                anchors.topMargin: 0
-                anchors.bottomMargin: 0
-                model: ListModel {
-                    ListElement {
-                        name: "Red"
-                        colorCode: "red"
-                    }
-
-                    ListElement {
-                        name: "Green"
-                        colorCode: "green"
-                    }
-                }
-                delegate: Row {
-                    spacing: 5
-                    Rectangle {
-                        width: 100
-                        height: 20
-                        color: colorCode
-                    }
-
-                    Text {
-                        width: 100
-                        text: name
-                    }
+                Text {
+                    anchors.centerIn: parent
+                    text: statusText
+                    color: "black"
+                    font.bold: true
                 }
             }
         }
 
-        // Определение состояний
         states: [
             State {
                 name: "WaitingForFile"
@@ -272,14 +231,38 @@ ApplicationWindow {
 
         ]
         state: "WaitingForFile"
-
     }
+
+    // FileDialog {
+    // id: fileDialog
+    // title: "Выберите файл"
+    // nameFilters: ["Текстовые файлы (*.txt)", "Все файлы (*)"]
+
+    // onAccepted: {
+    // console.log("Выбранный файл: " + fileDialog.file)
+    // Здесь можно обработать выбранный файл
+    // }
+    // onRejected: {
+    // console.log("Файл не был выбран")
+    // }
+    // }
+
+    // Button {
+    // text: "Открыть диалог выбора файла"
+    // onClicked: fileDialog.open()
+    // }
 
     Connections {
         target: controller
 
         function onUpdateProgressStatusSignal(value) {
             progressBar.value = value
+
+            //Sometimes it overrides status bar
+            if (mainParent.state !== FileExplorerEnums.PAUSED)
+            {
+                statusText = "Scan in progress " + Math.round(value) + " %"
+            }
         }
 
         function onFileExplorerStateChanged(value) {
@@ -290,18 +273,23 @@ ApplicationWindow {
                 break
             case FileExplorerEnums.READY_TO_START:
                 mainParent.state = "ReadyToStart";
+                statusText = "File " + filePath + " loaded";
                 break
             case FileExplorerEnums.RUNNIG:
                 mainParent.state = "ScanInProgress";
+                statusText = "Scan in progress";
                 break
             case FileExplorerEnums.PAUSED:
                 mainParent.state = "ScanPaused";
+                statusText = "Scan is paused";
                 break
             case FileExplorerEnums.STOPPED:
                 mainParent.state = "ScanStopped";
+                statusText = "Scan is stopped";
                 break
             case FileExplorerEnums.READING_ENDED:
                 mainParent.state = "ScanStopped";
+                statusText = "Reached the end of file";
                 break
             default:
                 break
@@ -309,9 +297,15 @@ ApplicationWindow {
         }
 
         function onUpdateWordsRating (list) {
-            console.log("list legth " + list.length);
+            wordFrequencyModel.clear()
             for (var i = 0; i < list.length; i++) {
-                console.log(list[i].word + ": " + list[i].frequency);
+                var w = Math.pow(list[i].frequency, 3)/Math.pow(list[0].frequency, 3)
+                wordFrequencyModel.append({
+                                              "name": list[i].word,
+                                              "w": w,
+                                              "colorPattern" : i % 2 === 0 ? "#5b3b8c" : "#b3d68d",
+                                              "textColorPattern" : i % 2 === 0 ? "white" : "black",
+                                              "value": list[i].frequency});
             }
         }
     }
