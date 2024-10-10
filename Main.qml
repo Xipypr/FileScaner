@@ -251,8 +251,14 @@ ApplicationWindow {
         function onUpdateProgressStatusSignal(value) {
             progressBar.value = value
 
+            //To process correctly start new file
+            if (mainParent.state === "ReadyToStart")
+            {
+                return;
+            }
+
             //Sometimes it overrides status bar
-            if (mainParent.state !== FileExplorerEnums.PAUSED)
+            if (mainParent.state !== "ScanPaused")
             {
                 statusText = "Scan in progress " + Math.round(value) + " %"
             }
