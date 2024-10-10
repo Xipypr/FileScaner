@@ -22,6 +22,8 @@ qt_add_qml_module(appFileScaner
         SOURCES worker.h worker.cpp
         SOURCES fileexplorer.h fileexplorer.cpp
         SOURCES enums.h
+        SOURCES datamodel.h datamodel.cpp
+        SOURCES structs.h
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -6,8 +6,9 @@
 
 static QRegularExpression regExp("\\s+");
 
-FileExplorer::FileExplorer(QObject *parent)
+FileExplorer::FileExplorer(DataModel &dataModel, QObject *parent)
     : QObject{parent}
+    , m_dataModel(dataModel)
 {}
 
 qint64 FileExplorer::openFile(const QString &fileName)
@@ -70,14 +71,14 @@ void FileExplorer::startScanFile()
     while (m_state == FileExplorerEnums::States::RUNNIG  &&
            !m_file.atEnd())
     {
-        QByteArray block = m_file.read(m_buffSize); // Читаем блок данных
-        block.prepend(m_leftover); // Добавляем незавершённое слово из предыдущего блока
+        QByteArray block = m_file.read(m_buffSize);
+        block.prepend(m_leftover);
 
         int lastSpaceIndex = block.lastIndexOf(' ');
         if (lastSpaceIndex != -1)
         {
-            m_leftover = block.mid(lastSpaceIndex + 1); // Сохраняем остаток для следующего блока
-            block = block.left(lastSpaceIndex); // Текущий блок до последнего пробела
+            m_leftover = block.mid(lastSpaceIndex + 1);
+            block = block.left(lastSpaceIndex);
         }
         else
         {
@@ -93,19 +94,15 @@ void FileExplorer::startScanFile()
         //Just a simple stupid solution to update proress
         if (iter == 10)
         {
+            m_dataModel.updateData(std::move(words));
             updateProgressStatus();
         }
     }
 
+
     if (m_file.atEnd())
     {
         setNewState(FileExplorerEnums::States::READING_ENDED);
-    }
-
-    QHash<QString, quint32> resultHash;
-    for (auto & word: words)
-    {
-        ++resultHash[word];
     }
 
     if (m_state == FileExplorerEnums::States::PAUSED)

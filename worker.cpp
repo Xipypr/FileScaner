@@ -3,6 +3,7 @@
 
 Worker::Worker(QObject *parent)
     : QObject{parent}
+    , m_fileExplorer(m_data, this)
 {
     connect(&m_fileExplorer, &FileExplorer::scanStopped, this, &Worker::scanStopped);
     connect(&m_fileExplorer, &FileExplorer::scanStarted, this, &Worker::scanStarted);
@@ -38,4 +39,10 @@ void Worker::stopScan()
 {
     m_fileExplorer.stopScan();
     //should get signal from fileExplorer
+}
+
+void Worker::updateWordRatings()
+{
+    auto result = m_data.getTopWords();
+    emit updateWordsRating(result);
 }

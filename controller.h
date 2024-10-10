@@ -2,7 +2,10 @@
 #define CONTROLLER_H
 
 #include "enums.h"
+#include "structs.h"
+
 #include <QObject>
+#include <QTimer>
 
 class Controller : public QObject
 {
@@ -27,12 +30,17 @@ public slots:
         emit stopScanSignal();
     }
 
+    void updateWordRatings(){
+        emit updateWordRatingsSignal();
+    }
+
 //Signals to worker
 signals:
     void openFileSignal(const QString &fileName);
     void startScanSignal();
     void pauseScanSignal();
     void stopScanSignal();
+    void updateWordRatingsSignal();
 
 
 //Signals to qml
@@ -46,6 +54,8 @@ signals:
     void scanStarted();
     void scanPaused();
     void scanStopped();
+
+    void updateWordsRating(QList<WordFrequency>);
 };
 
 #endif // CONTROLLER_H

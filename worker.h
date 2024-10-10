@@ -5,6 +5,7 @@
 
 #include "enums.h"
 #include "fileexplorer.h"
+#include "datamodel.h"
 
 class Worker : public QObject
 {
@@ -23,20 +24,25 @@ public slots:
 
     void stopScan();
 
+    void updateWordRatings();
+
 signals:
-    void dataChanged(int value);
+    void dataChanged(int);
     void workFinished();
 
-    void fileOpened(qint64 fileSize);
+    void fileOpened(qint64);
     void scanStarted();
     void scanPaused();
     void scanStopped();
 
     void fileExplorerStateChanged(FileExplorerEnums::States);
 
-    void updateProgressStatusSignal(double progress);
+    void updateProgressStatusSignal(double);
+
+    void updateWordsRating(QList<WordFrequency>);
 
 private:
+    DataModel m_data;
     FileExplorer m_fileExplorer;
 };
 

@@ -1,6 +1,9 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 
+import equipment.structs
+import equipment.enums
+
 ApplicationWindow {
     visible: true
     width: 640
@@ -303,7 +306,14 @@ ApplicationWindow {
 
         function onFileExplorerStateChanged(value) {
             console.log("State changed " + value)
-            // console.log("State check" + FileExplorerEnums.IDLE)
+            console.log(value === FileExplorerEnums.IDLE)
+        }
+
+        function onUpdateWordsRating (list) {
+            console.log("list legth " + list.length);
+            for (var i = 0; i < list.length; i++) {
+                console.log(list[i].word + ": " + list[i].frequency);
+            }
         }
     }
 }

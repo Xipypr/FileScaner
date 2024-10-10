@@ -6,12 +6,13 @@
 #include <QByteArray>
 
 #include "enums.h"
+#include "datamodel.h"
 
 class FileExplorer : public QObject
 {
     Q_OBJECT
 public:
-    explicit FileExplorer(QObject *parent = nullptr);
+    explicit FileExplorer(DataModel &dataModel ,QObject *parent = nullptr);
 
     /*!
      * \brief File openning
@@ -48,8 +49,9 @@ private:
     QFile m_file;
     qint64 m_currentOffset = 0;
     QByteArray m_leftover = {};
-
     qint64 m_buffSize = 1024;
+
+    DataModel &m_dataModel;
 };
 
 #endif // FILEEXPLORER_H
