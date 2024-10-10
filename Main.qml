@@ -263,26 +263,32 @@ ApplicationWindow {
             {
             case FileExplorerEnums.IDLE:
                 mainParent.state = "ReadyToStart";
+                updateTimer.running = false
                 break
             case FileExplorerEnums.READY_TO_START:
                 mainParent.state = "ReadyToStart";
                 statusText = "File " + filePath + " loaded";
+                updateTimer.running = false
                 break
             case FileExplorerEnums.RUNNIG:
                 mainParent.state = "ScanInProgress";
                 statusText = "Scan in progress";
+                updateTimer.running = true
                 break
             case FileExplorerEnums.PAUSED:
+                updateTimer.running = false
                 mainParent.state = "ScanPaused";
                 statusText = "Scan is paused";
                 break
             case FileExplorerEnums.STOPPED:
                 mainParent.state = "ScanStopped";
                 statusText = "Scan is stopped";
+                updateTimer.running = false
                 break
             case FileExplorerEnums.READING_ENDED:
                 mainParent.state = "ScanStopped";
                 statusText = "Reached the end of file";
+                updateTimer.running = false
                 break
             default:
                 break
@@ -300,6 +306,16 @@ ApplicationWindow {
                                               "textColorPattern" : i % 2 === 0 ? "white" : "black",
                                               "value": list[i].frequency});
             }
+        }
+    }
+
+    Timer {
+        id: updateTimer
+        interval: 500
+        running: false
+        repeat: true
+        onTriggered: {
+            controller.updateWordRatings()
         }
     }
 }
